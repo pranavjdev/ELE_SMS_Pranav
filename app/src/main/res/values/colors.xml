@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0C112E</color>
+    <color name="bottomTabColor">#0B1023</color>
+
+    <color name="colorPrimaryDark">#0C112E</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <color name="tabColor">#80A8EC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="progress_bg">#510000</color>
+    <color name="black">#000000</color>
+    <color name="semi_transparent_black">#77000000</color>
+    <color name="black_trans">#330000</color>
+    <color name="header_color">#173A8A</color>
+
+    <color name="domain_bg">#A260CB</color>
+    <color name="login_col_1">#AE6CFF</color>
+    <color name="login_col_2">#75BCF7</color>
+    <color name="circle_logo_bg">#8E76E3</color>
+
+    <color name="welcome_bg">#151A35</color>
+
+    <color name="login_bg">#5250B2</color>
+    <color name="job_search_bg">#6B95DC</color>
+
+    <color name="signup_one">#B072FE</color>
+    <color name="signup_two">#7BBFF8</color>
+
+    <!--Intro Page-->
+    <color name="footer_lower">#7193DC</color>
+    <color name="footer_upper">#5D9CDE</color>
+
+    <color name="btn_start">#7196DC</color>
+    <color name="btn_end">#74B9F5</color>
+    <color name="deep_gray_text">#6D7FC8</color>
+    <color name="gray_text">#CACACA</color>
+    <color name="violet">#8882BD</color>
+
+    <color name="apply_button">#02BFF3</color>
+
+
+
+    <color name="tribtn_start">#4F79E0</color>
+    <color name="tribtn_mid">#4F9DDE</color>
+    <color name="tribtn_end">#9479F9</color>
+
+    <color name="semi_transparent_start">#99295274</color>
+    <color name="semi_transparent_end">#99433975</color>
+    <color name="inactive_circle">#DDDBE9</color>
+    <color name="profile_sub_bg">#EBEBEB</color>
+    <color name="camera_top">#4E82DD</color>
+    <color name="login_border">#7372C1</color>
+    <color name="camera_bottom">#4E9CDE</color>
+    <color name="red">#FF211F</color>
+    <color name="active_circle">#EA2066</color>
+
+    <color name="inactive_marital">#D7CCDC</color>
+    <color name="active_marital">#A260CB</color>
+
+    <color name="purple_text">#7C74C0</color>
+    <color name="purple_theme">#7FA7EC</color>
+
+    <color name="profile_start">#4B87DD</color>
+    <color name="profile_mid">#4B9AD9</color>
+    <color name="profile_end">#8B6EE6</color>
+
+
+
+
+    <color name="light_gray">#ABBAC2</color>
+    <color name="text_gray">#6B767D</color>
+    <color name="coral_blue">#1DAEFA</color>
+    <color name="dark_blue">#125D9D</color>
+
+    <color name="circleProgressCompleteStartGradient">@color/dark_blue</color>
+    <color name="circleProgressCompleteEndGradient">@color/coral_blue</color>
+    <color name="circleProgressIncompleteStartGradient">@color/light_gray</color>
+    <color name="circleProgressIncompleteEndGradient">@color/light_gray</color>
+
+
+    <!--NEW DESIGN-->
+    <color name="theme_color">#5250B0</color>
+    <color name="intro_1">#FF5354</color>
+    <color name="intro_2">#6787ED</color>
+    <color name="intro_3">#8B57D2</color>
+    <color name="intro_4">#66A732</color>
+    <color name="indicator_unselected">#4DFFFFFF</color>
+    <color name="profile_bg_color1">#3E435C</color>
+    <color name="profile_bg_color2">#5352B4</color>
+    <color name="sky_blue">#02BFF3</color>
+    <color name="btn_gray">#ECECEC</color>
+    <color name="btn_gray_hover">#d1d0d0</color>
+    <color name="new_color">#004080</color>
+
+
+
+    <color name="default_text_color_holo_dark">#ffffffff</color>
+    <color name="default_text_color_holo_dark_disabled">#ff4c4c4c</color>
+    <color name="default_divider_color_dark">#28ffffff</color>
+    <color name="default_button_background_dark">#00000000</color>
+    <color name="default_button_background_pressed_dark">#46c5c1ff</color>
+    <color name="default_keyboard_indicator_color_dark">#ff33b5e5</color>
+
+    <color name="default_text_color_holo_light">#ff000000</color>
+    <color name="default_text_color_holo_light_disabled">#ffb2b2b2</color>
+    <color name="default_divider_color_light">#28000000</color>
+    <color name="default_button_background_light">#00000000</color>
+    <color name="default_button_background_pressed_light">#ff00ddff</color>
+    <color name="default_keyboard_indicator_color_light">#ff00ddff</color>
+
+    <color name="circle_background">#f2f2f2</color>
+    <color name="ampm_text_color">#8c8c8c</color>
+    <color name="done_text_color_normal">#000000</color>
+    <color name="done_text_color_disabled">#cccccc</color>
+    <color name="numbers_text_color">#8c8c8c</color>
+
+    <color name="bpWhite">#ffffff</color>
+    <color name="bpblack">#ff000000</color>
+    <color name="bpLine_background">#e0e0e0</color>
+    <color name="bpTransparent">#00000000</color>
+    <color name="bpTransparent_black">#7f000000</color>
+    <color name="bpBlue">#33b5e5</color>
+    <color name="bpBlue_focused">#c1e8f7</color>
+    <color name="bpDarker_blue">#0099cc</color>
+    <color name="bp_disabled_day">#f44336</color>
+
+    <color name="progress_color">#5980CA</color>
+
+
+    <color name="neutral_pressed">#33999999</color>
+    <color name="date_picker_text_normal">#ff999999</color>
+    <color name="date_picker_text_disabled">#bdbdbd</color>
+
+    <color name="calendar_header">#999999</color>
+    <color name="date_picker_view_animator">#f2f2f2</color>
+    <color name="calendar_selected_date_text">#ffd1d2d4</color>
+    <color name="domain_action_bar">#00BFA5</color>
+    <color name="position_action_bar">#44289D</color>
+    <color name="organization_action_bar">#5FA72B</color>
+
+    <color name="cal1">#00C1A6</color>
+    <color name="cal2">#F44236</color>
+
+    <color name="grad1">#F1BBC6</color>
+    <color name="grad2">#F9DFCA</color>
+
+    <color name="tab_btn">#235EE1</color>
+    <color name="game_bg_color">#0C112E</color>
+    <color name="game_item_bg">#171D37</color>
+
+    <color name="blue_txt_color">#5A8BE8</color>
+    <color name="footer_txt_color">#6E6AA5</color>
+
+
+    <color name="action_bar_new">#183989</color>
+    <color name="action_bar_old">#171D37</color>
+    <color name="gray_profile">#6D6F7D</color>
+    <color name="green_profile">#3BBC9D</color>
+
+    <color name="interaction_blue">#02BFF3</color>
+    <color name="interaction_orange">#F64338</color>
+    <color name="interaction_yellow">#FF9802</color>
+    <color name="white_gray">#F1F1F3</color>
+</resources>
