@@ -8,11 +8,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,8 +25,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import smsele.techniche.com.ele_sms_pranav.adapter.MessagesAdapter;
+import smsele.techniche.com.ele_sms_pranav.adapter.ViewPagerAdapter;
 import smsele.techniche.com.ele_sms_pranav.model.SmsModel;
 import smsele.techniche.com.ele_sms_pranav.utils.DataBaseHelper;
+import smsele.techniche.com.ele_sms_pranav.utils.DateTimeUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     private DataBaseHelper dataBaseHelper = null;
 
+    private TabLayout tabLayout = null;
+    private ViewPager viewPager = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +55,21 @@ public class MainActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(this);
         dataBaseHelper.clearSms();
 
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+
+
+
+
+        Log.e("---valid", "" + DateTimeUtils.isValidMobile("+919895473514"));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             if (canAccessMessages()) {
 
-new LoadSms().execute();
+                new LoadSms().execute();
             } else {
                 ActivityCompat.requestPermissions(this, INITIAL_PERMS, INITIAL_REQUEST);
             }
@@ -58,6 +77,18 @@ new LoadSms().execute();
             new LoadSms().execute();
         }
     }
+
+
+    private void setupViewPager(ViewPager viewPager) {
+     /*   ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new NewLearningArticleFragment().newInstance(), "Promotions");
+        adapter.addFrag(new NewLearningCoursesFragment().newInstance(), "Others");
+        adapter.addFrag(new NewLearningBooksFragment().newInstance(), "All");
+        viewPager.setOffscreenPageLimit(3);
+*/
+        //viewPager.setAdapter(adapter);
+    }
+
 
 
     private ArrayList<SmsModel> getMessages(HashMap<String, ArrayList<SmsModel>> sms) {
@@ -191,7 +222,7 @@ new LoadSms().execute();
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(pd!=null)
+            if (pd != null)
                 pd.dismiss();
             MessagesAdapter messagesAdapter = new MessagesAdapter(allMessages, MainActivity.this);
             smsList.setAdapter(messagesAdapter);
