@@ -14,6 +14,16 @@ public class SmsModel {
 
     private String type = null;
 
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    private String direction = null;
+
     private String count = null;
 
     public String getCount() {

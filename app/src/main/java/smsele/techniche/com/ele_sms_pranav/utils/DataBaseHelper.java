@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -25,8 +26,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String KEY_ID = "sms_id";
     public static final String KEY_FROM = "from_mob";
     public static final String KEY_DATE = "date_message";
-    public static final String KEY_TYPE = "type_message";
+    public static final String KEY_DIRECTION = "message_direction";
     public static final String KEY_MESSAGE = "message_body";
+    public static final String KEY_TYPE = "message_type";
 
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -45,6 +47,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + KEY_FROM + " TEXT,"
                 + KEY_DATE + " TEXT ,"
                 + KEY_MESSAGE + " TEXT ,"
+                + KEY_DIRECTION + " TEXT ,"
                 + KEY_TYPE + " TEXT)";
 
 
@@ -59,18 +62,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public long createTable(SmsModel model) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_FROM,model.getFrom());
-        values.put(KEY_DATE,model.getDate());
-        values.put(KEY_TYPE,model.getType());
-        values.put(KEY_MESSAGE,model.getMessage());
+        values.put(KEY_FROM, model.getFrom());
+        values.put(KEY_DATE, model.getDate());
+        values.put(KEY_TYPE, model.getType());
+        values.put(KEY_MESSAGE, model.getMessage());
+        values.put(KEY_DIRECTION, model.getDirection());
         long id = db.insert(TABLE_SMS, null, values);
         db.close();
         return id;
     }
 
-    public ArrayList<SmsModel> getAllMessges(  String mobile) {
+    public ArrayList<SmsModel> getAllMessges(String mobile) {
         ArrayList<SmsModel> models = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_SMS + " where from_mob='" + mobile+"' order by date_message asc";
+        String selectQuery = "SELECT  * FROM " + TABLE_SMS + " where from_mob='" + mobile + "' order by date_message asc";
         Log.e("---Querry", "" + selectQuery);
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -81,7 +85,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 smsModel.setFrom(cursor.getString(1));
                 smsModel.setDate(cursor.getString(2));
                 smsModel.setMessage(cursor.getString(3));
-                smsModel.setType(cursor.getString(4));
+                smsModel.setDirection(cursor.getString(4));
+                smsModel.setType(cursor.getString(5));
                 models.add(smsModel);
             } while (cursor.moveToNext());
         }
@@ -90,7 +95,41 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return models;
     }
 
-    public void clearSms(){
+    public ArrayList<SmsModel> getAllMessgesFromType(String type) {
+        ArrayList<SmsModel> models = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + TABLE_SMS + " order by date_message asc";
+        if (!TextUtils.isEmpty(type) && !type.equals("All"))
+            selectQuery = "SELECT  * FROM " + TABLE_SMS + " where message_type='" + type + "' order by date_message asc";
+        Log.e("---Querry", "" + selectQuery);
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                SmsModel smsModel = new SmsModel();
+                smsModel.setFrom(cursor.getString(1));
+                smsModel.setDate(cursor.getString(2));
+                smsModel.setMessage(cursor.getString(3));
+                smsModel.setDirection(cursor.getString(4));
+                smsModel.setType(cursor.getString(5));
+                models.add(smsModel);
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return models;
+    }
+
+    public int getMessageCount(String mobile) {
+        String countQuery = "SELECT  * FROM " + TABLE_SMS + " where from_mob='" + mobile + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int cnt = cursor.getCount();
+        cursor.close();
+        return cnt;
+    }
+
+    public void clearSms() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_SMS);
         db.close();

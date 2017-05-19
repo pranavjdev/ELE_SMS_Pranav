@@ -13,105 +13,59 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-import smsele.techniche.com.ele_sms_pranav.adapter.MessagesAdapter;
 import smsele.techniche.com.ele_sms_pranav.adapter.ViewPagerAdapter;
+import smsele.techniche.com.ele_sms_pranav.fragments.PromotionsFragment;
 import smsele.techniche.com.ele_sms_pranav.model.SmsModel;
 import smsele.techniche.com.ele_sms_pranav.utils.DataBaseHelper;
 import smsele.techniche.com.ele_sms_pranav.utils.DateTimeUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView smsList = null;
 
+    private TabLayout tabLayout = null;
+    private DataBaseHelper dataBaseHelper = null;
+    private ViewPager viewPager = null;
     private static final String[] INITIAL_PERMS = {
             Manifest.permission.READ_SMS
     };
 
     private static final int INITIAL_REQUEST = 13;
 
-    private DataBaseHelper dataBaseHelper = null;
-
-    private TabLayout tabLayout = null;
-    private ViewPager viewPager = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        smsList = (RecyclerView) findViewById(R.id.smsList);
-        smsList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        dataBaseHelper = new DataBaseHelper(this);
-        dataBaseHelper.clearSms();
 
+        dataBaseHelper = new DataBaseHelper(MainActivity.this);
+        dataBaseHelper.clearSms();
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
 
 
-
-        Log.e("---valid", "" + DateTimeUtils.isValidMobile("+919895473514"));
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             if (canAccessMessages()) {
-
-                new LoadSms().execute();
+                new CreateSmsTable().execute();
             } else {
-                ActivityCompat.requestPermissions(this, INITIAL_PERMS, INITIAL_REQUEST);
+                ActivityCompat.requestPermissions(this,INITIAL_PERMS, INITIAL_REQUEST);
             }
         } else {
-            new LoadSms().execute();
+
+            new CreateSmsTable().execute();
         }
+
+
+
+
     }
-
-
-    private void setupViewPager(ViewPager viewPager) {
-     /*   ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new NewLearningArticleFragment().newInstance(), "Promotions");
-        adapter.addFrag(new NewLearningCoursesFragment().newInstance(), "Others");
-        adapter.addFrag(new NewLearningBooksFragment().newInstance(), "All");
-        viewPager.setOffscreenPageLimit(3);
-*/
-        //viewPager.setAdapter(adapter);
-    }
-
-
-
-    private ArrayList<SmsModel> getMessages(HashMap<String, ArrayList<SmsModel>> sms) {
-        ArrayList<SmsModel> list = new ArrayList<>();
-        Iterator it = sms.entrySet().iterator();
-        while (it.hasNext()) {
-            SmsModel smsModel = new SmsModel();
-            Map.Entry pair = (Map.Entry) it.next();
-            //smsModel.setFrom((String)pair.getKey());
-            ArrayList<SmsModel> smsList = (ArrayList<SmsModel>) pair.getValue();
-            if (smsList != null && smsList.size() > 0) {
-                smsModel.setMessage(smsList.get(0).getMessage());
-                smsModel.setDate(smsList.get(0).getDate());
-            }
-            smsModel.setFrom((String) pair.getKey());
-            smsModel.setCount("(" + (smsList.size() + 1) + ")");
-
-            list.add(smsModel);
-            it.remove(); // avoids a ConcurrentModificationException
-        }
-        return list;
-    }
-
     private boolean canAccessMessages() {
         return (hasPermission(Manifest.permission.READ_SMS));
     }
@@ -119,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean hasPermission(String perm) {
 
-        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, perm));
+        return (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(MainActivity.this, perm));
     }
 
     @Override
@@ -128,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case INITIAL_REQUEST:
                 if (canAccessMessages()) {
-                    new LoadSms().execute();
+                    new CreateSmsTable().execute();
                 } else {
                     Toast.makeText(MainActivity.this, "Please enable sms permission", Toast.LENGTH_SHORT).show();
                 }
@@ -139,31 +93,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<SmsModel> loadSmsFromPhone() {
-        ArrayList<SmsModel> sms = new ArrayList();
+    private class CreateSmsTable extends AsyncTask<Void, Void, Void> {
 
-        Uri uriSms = Uri.parse("content://sms/inbox");
-        // Cursor cursor = getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"}, null, null, null);
-        Cursor cursor = getContentResolver().query(Uri.parse("content://sms/"), null, null, null, null);
-
-        cursor.moveToFirst();
-        while (cursor.moveToNext()) {
-            SmsModel smsModel = new SmsModel();
-            smsModel.setId(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-            smsModel.setFrom(cursor.getString(cursor.getColumnIndexOrThrow("address")));
-            smsModel.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
-            smsModel.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
-
-            if (cursor.getString(cursor.getColumnIndexOrThrow("type")).contains("1")) {
-                smsModel.setType("inbox");
-            } else {
-                smsModel.setType("sent");
-            }
+        private ProgressDialog pd = null;
 
 
-            sms.add(smsModel);
+        @Override
+        protected Void doInBackground(Void... voids) {
+            HashMap<String, ArrayList<SmsModel>> sms = getSmsFromList();
+            return null;
         }
-        return sms;
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (pd != null)
+                pd.dismiss();
+
+            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+            adapter.addFrag(new PromotionsFragment().newInstance("Promotion"), "Promotion");
+            adapter.addFrag(new PromotionsFragment().newInstance("Transaction"), "Transaction");
+            adapter.addFrag(new PromotionsFragment().newInstance("All"), "All");
+            viewPager.setOffscreenPageLimit(3);
+            viewPager.setAdapter(adapter);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("loading");
+            pd.show();
+        }
     }
 
     private HashMap<String, ArrayList<SmsModel>> getSmsFromList() {
@@ -183,9 +144,15 @@ public class MainActivity extends AppCompatActivity {
             smsModel.setMessage(cursor.getString(cursor.getColumnIndexOrThrow("body")));
 
             if (cursor.getString(cursor.getColumnIndexOrThrow("type")).contains("1")) {
-                smsModel.setType("inbox");
+                smsModel.setDirection("inbox");
             } else {
-                smsModel.setType("sent");
+                smsModel.setDirection("sent");
+            }
+
+            if (DateTimeUtils.isValidMobile(from)) {
+                smsModel.setType("Transaction");
+            } else {
+                smsModel.setType("Promotion");
             }
 
             dataBaseHelper.createTable(smsModel);
@@ -204,36 +171,5 @@ public class MainActivity extends AppCompatActivity {
             sms.add(smsModel);
         }
         return smsList;
-    }
-
-    private class LoadSms extends AsyncTask<Void, Void, Void> {
-
-        private ProgressDialog pd = null;
-
-        private ArrayList<SmsModel> allMessages = null;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            HashMap<String, ArrayList<SmsModel>> sms = getSmsFromList();
-            allMessages = getMessages(sms);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (pd != null)
-                pd.dismiss();
-            MessagesAdapter messagesAdapter = new MessagesAdapter(allMessages, MainActivity.this);
-            smsList.setAdapter(messagesAdapter);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("loading");
-            pd.show();
-        }
     }
 }

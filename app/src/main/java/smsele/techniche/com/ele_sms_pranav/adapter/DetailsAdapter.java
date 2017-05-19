@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,8 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.ViewHold
         final SmsModel smsModel = smsModels.get(position);
       //  holder.from.setText(smsModel.getFrom());
         holder.message.setText(smsModel.getMessage());
-        String type = smsModel.getType();
+        String type = smsModel.getDirection();
+        Log.e("--type",type);
         if(!TextUtils.isEmpty(type) && type.equalsIgnoreCase("sent")) {
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.linearLayout.getLayoutParams();
