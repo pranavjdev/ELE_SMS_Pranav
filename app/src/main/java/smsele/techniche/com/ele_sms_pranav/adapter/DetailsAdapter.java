@@ -29,7 +29,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.ViewHold
 
     private Context context = null;
     private ArrayList<SmsModel> smsModels = null;
-
+private String s = null;
 
     public DetailsAdapter(ArrayList<SmsModel> smsModels, Context context){
         this.context = context;
